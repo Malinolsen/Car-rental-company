@@ -1,7 +1,10 @@
 from app import app
 from flask import render_template, request, redirect, url_for, jsonify
 import json
-from Car_Rental_Service.models import *
+from models.driver import *
+from models.car import *
+from models.customer import *
+from models.employee import *
 
 #Cars
 @app.route('/update_car',methods=['PUT'])
