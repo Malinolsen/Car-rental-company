@@ -48,6 +48,38 @@ def Read_Cars():
 
 def check_car_status(car_ID):
     with _get_connection.session() as session:
-        car_status = session.run("MATCH(a:Car {car_ID:$car_ID, status: 'available'})set a.status='booked' RETURN a",
+        car_status_available = session.run("MATCH(a:Car {car_ID:$car_ID, status: 'available'})set a.status='booked' RETURN a",
                                  car_ID=car_ID)
-        return car_status.single()
+        return car_status_available.single()
+
+def update_available_status(car_ID):
+    with _get_connection.session() as session:
+        car = session.run(
+            "MATCH (a:Car {car_ID: $car_ID}) SET a.status = 'available' RETURN a",
+            car_ID=car_ID
+        )
+    return car.single()
+
+def rented_car_status(customer_ID, car_ID):
+    with _get_connection.session() as session:
+        check_booked=session.run("MATCH(p:Customer {customer_ID:$customer_ID})-->(a:Car {car_ID:$car_ID, status: 'booked'}) RETURN a", customer_ID=customer_ID, car_ID= car_ID)
+        if check_booked:
+            car_status_booked= session.run("MATCH(a:Car {car_ID:$car_ID, status: 'booked'})set a.status='rented' RETURN a",
+                                 car_ID=car_ID)
+            return car_status_booked.single()
+
+def booked_status(customer_ID, car_ID):
+    with _get_connection.session() as session: 
+        car_status = session.run("MATCH(p:Customer {customer_ID:$customer_ID})-->(a:Car {car_ID:$car_ID, status: 'booked'}) RETURN a", customer_ID=customer_ID, car_ID=car_ID)
+        if car_status:
+            return car_status.single()
+
+def return_car(customer_ID, car_ID, car_status):
+    with _get_connection.session() as session: 
+        check_booked_car=booked_status(customer_id, car_id)
+
+        if check_booked_car:
+            car_returned = session.run("MATCH(a:Car {car_ID:$car_ID, status: 'booked'})SET a.status= $car_status RETURN a",
+                                 car_ID=car_ID, car_status=car_status)
+
+
