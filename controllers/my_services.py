@@ -92,13 +92,63 @@ def order_car():
 
     booked_cars = check_customerBookings(customer_id)
     if booked_cars:
-        return jsonify({"message": "Customer has already booked a car"}), 404
+        return jsonify({"message": "Customer has already booked a car"}), 200
     
     car_status = check_car_status(car_id)
     if not car_status:
-        return jsonify({"message":"Car is not available"}), 404
+        return jsonify({"message":"Car is not available"}),200
     
-    create_booking(customer_id, customer_id)
+    create_booking(customer_id, car_id)
     return jsonify({"message":"Car successfully booked."}), 200
 
 
+#Cancel car order
+@app.route('/cancel_car_order', methods=['POST'])
+def cancel_car_order():
+    customer_id = request.args.get('customer_ID')
+    car_id = request.args.get('car_ID')
+
+    car = check_customerBooking(customer_id, car_id)
+
+    if not car:
+        return jsonify({"message": "Customer has not booked this car."})
+
+    rented_car_status(car_id)
+
+    return jsonify({"message": "Car order is successfully cancelled."})
+
+
+#Rent car 
+@app.route('/rent_car', methods=['POST'])
+def rent_car():
+    customer_id = requesta.args.get('customer_ID')
+    car_ID = request.args.get('car_ID')
+
+    customer_booking = check_customerBooking(customer_id, car_id)
+    if customer_booking: 
+        car_rent = rented_car_status(car_id)
+        if car_rent:
+            return jsonify({"message":"Customer is now renting the car"})
+        else:
+            return jsonify({"message":"Customer has not booked the car"})
+    else:
+        return jsonify({"Customer has not booked the car"})
+
+
+#Return car 
+@app.route('/return_car', methods=['POST'])
+def return_car():
+    customer_id = request.args.get('customer_ID')
+    car_id = request.args.get('car_ID')
+    car_status = request.args.get('car_status')
+
+    if car_status not in ['available', 'damaged']:
+        return jsonify({"message": "Customer provided invalid car status. It must be either available or damaged"})
+    
+
+    returned_car = return_car(customer_id, car_id, car_status)
+    if not returned car: 
+        return jsonify({"message": "Customer has not booked the car"})
+    
+    else:
+        return jsonify({"message": f"Car status updated to {car_status}"})
