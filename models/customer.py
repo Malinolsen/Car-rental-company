@@ -44,7 +44,7 @@ def delete_Customer(name, age, customer_ID, address):
 
 
 #Check customer bookings
-def check_customerBookings(customer_ID):
+def check_customerBookings(customer_ID,car_ID):
      with _get_connection.session() as session:
           car = session.run("MATCH (p:Customer {customer_ID:$customer_ID})-->(a:Car) RETURN a", customer_ID=customer_ID)
           booked_aCar = [record['a'] for record in car]
@@ -54,5 +54,5 @@ def check_customerBookings(customer_ID):
 def create_booking(customer_ID, car_ID):
     with _get_connection.session() as session:
         session.run("MATCH (p:Customer {customer_ID:$customer_ID}), (a:Car {car_ID:$car_ID}) "
-                    "CREATE (p)-[:BOOKED]->(a)", customer_ID=customer_ID, car_ID=car_ID)
+                    "CREATE (p)-[r:BOOKED]->(a)", customer_ID=customer_ID, car_ID=car_ID)
 
