@@ -76,7 +76,7 @@ def booked_status(customer_ID, car_ID):
 
 def return_car(customer_ID, car_ID, car_status):
     with _get_connection.session() as session: 
-        check_booked_car=booked_status(customer_id, car_id)
+        check_booked_car=booked_status(customer_ID, car_ID)
 
         if check_booked_car:
             car_returned = session.run("MATCH(a:Car {car_ID:$car_ID, status: 'booked'})SET a.status= $car_status RETURN a",
