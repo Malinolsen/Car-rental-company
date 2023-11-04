@@ -108,7 +108,7 @@ def cancel_car_order():
     customer_id = request.args.get('customer_ID')
     car_id = request.args.get('car_ID')
 
-    car = check_customerBooking(customer_id, car_id)
+    car = check_customerBookings(customer_id, car_id)
 
     if not car:
         return jsonify({"message": "Customer has not booked this car."})
@@ -121,10 +121,10 @@ def cancel_car_order():
 #Rent car 
 @app.route('/rent_car', methods=['POST'])
 def rent_car():
-    customer_id = requesta.args.get('customer_ID')
-    car_ID = request.args.get('car_ID')
+    customer_id = request.args.get('customer_ID')
+    car_id = request.args.get('car_ID')
 
-    customer_booking = check_customerBooking(customer_id, car_id)
+    customer_booking = check_customerBookings(customer_id, car_id)
     if customer_booking: 
         car_rent = rented_car_status(car_id)
         if car_rent:
@@ -147,7 +147,7 @@ def return_car():
     
 
     returned_car = return_car(customer_id, car_id, car_status)
-    if not returned car: 
+    if not returned_car: 
         return jsonify({"message": "Customer has not booked the car"})
     
     else:
