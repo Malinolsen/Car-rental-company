@@ -1,8 +1,8 @@
 from neo4j import GraphDatabase, Driver, AsyncGraphDatabase, AsyncDriver
 import json 
 
-URI = "Your URI"
-AUTH = ("neo4j", "YOUR-AUTH-KEY")
+URI = "neo4j+s://f10a56c5.databases.neo4j.io"
+AUTH = ("neo4j", "NQMqDPzJAaARcU_-0lCoAQ2bB5efvttgj71eDu8fMYA")
 
 def _get_connection() -> Driver:
     driver = GraphDatabase.driver(URI, auth=AUTH)
